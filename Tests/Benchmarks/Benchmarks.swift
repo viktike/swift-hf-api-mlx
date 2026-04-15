@@ -1,4 +1,6 @@
 import BenchmarkHelpers
+import MLXEmbedders
+import MLXEmbeddersHFAPI
 import MLXLMHFAPI
 import Testing
 
@@ -34,5 +36,36 @@ struct Benchmarks {
             using: NoOpTokenizerLoader()
         )
         stats.printSummary(label: "Embedding load (swift-hf-api, no-op tokenizer)")
+    }
+
+    @Test func embeddingConvenience() async throws {
+        let config = EmbedderRegistry.bge_micro
+        let loader = NoOpTokenizerLoader()
+
+        // Free function loadModelContainer (default HubClient)
+        _ = try await MLXEmbeddersHFAPI.loadModelContainer(
+            using: loader,
+            configuration: config
+        )
+
+        // Free function loadModel (default HubClient)
+        _ = try await MLXEmbeddersHFAPI.loadModel(
+            using: loader,
+            configuration: config
+        )
+
+        // EmbedderModelFactory extension loadContainer (explicit HubClient)
+        _ = try await EmbedderModelFactory.shared.loadContainer(
+            from: HubClient.default,
+            using: loader,
+            configuration: config
+        )
+
+        // EmbedderModelFactory extension load (explicit HubClient)
+        _ = try await EmbedderModelFactory.shared.load(
+            from: HubClient.default,
+            using: loader,
+            configuration: config
+        )
     }
 }

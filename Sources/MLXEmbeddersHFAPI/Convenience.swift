@@ -6,17 +6,56 @@ import MLXEmbedders
 import MLXLMCommon
 import MLXLMHFAPI
 
-// MARK: - Convenience overloads defaulting to HubClient.default
+// MARK: - EmbedderModelFactory convenience overloads
+
+extension EmbedderModelFactory {
+
+    /// Load an embedding model using the default Hugging Face Hub client.
+    public func load(
+        from hub: HubClient = .default,
+        using tokenizerLoader: any TokenizerLoader,
+        configuration: ModelConfiguration,
+        useLatest: Bool = false,
+        progressHandler: @Sendable @escaping (Progress) -> Void = { _ in }
+    ) async throws -> sending EmbedderModelContext {
+        try await load(
+            from: hub as any Downloader,
+            using: tokenizerLoader,
+            configuration: configuration,
+            useLatest: useLatest,
+            progressHandler: progressHandler
+        )
+    }
+
+    /// Load an embedding model container using the default Hugging Face Hub client.
+    public func loadContainer(
+        from hub: HubClient = .default,
+        using tokenizerLoader: any TokenizerLoader,
+        configuration: ModelConfiguration,
+        useLatest: Bool = false,
+        progressHandler: @Sendable @escaping (Progress) -> Void = { _ in }
+    ) async throws -> EmbedderModelContainer {
+        try await loadContainer(
+            from: hub as any Downloader,
+            using: tokenizerLoader,
+            configuration: configuration,
+            useLatest: useLatest,
+            progressHandler: progressHandler
+        )
+    }
+}
+
+// MARK: - Free function convenience overloads
 
 /// Load an embedding model using the default Hugging Face Hub client.
-public func load(
+public func loadModel(
     from hub: HubClient = .default,
     using tokenizerLoader: any TokenizerLoader,
-    configuration: MLXEmbedders.ModelConfiguration,
+    configuration: ModelConfiguration,
     useLatest: Bool = false,
     progressHandler: @Sendable @escaping (Progress) -> Void = { _ in }
-) async throws -> (EmbeddingModel, Tokenizer) {
-    try await MLXEmbedders.load(
+) async throws -> sending EmbedderModelContext {
+    try await EmbedderModelFactory.shared.load(
         from: hub,
         using: tokenizerLoader,
         configuration: configuration,
@@ -29,11 +68,11 @@ public func load(
 public func loadModelContainer(
     from hub: HubClient = .default,
     using tokenizerLoader: any TokenizerLoader,
-    configuration: MLXEmbedders.ModelConfiguration,
+    configuration: ModelConfiguration,
     useLatest: Bool = false,
     progressHandler: @Sendable @escaping (Progress) -> Void = { _ in }
-) async throws -> MLXEmbedders.ModelContainer {
-    try await MLXEmbedders.loadModelContainer(
+) async throws -> EmbedderModelContainer {
+    try await EmbedderModelFactory.shared.loadContainer(
         from: hub,
         using: tokenizerLoader,
         configuration: configuration,
