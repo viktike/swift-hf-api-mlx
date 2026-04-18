@@ -15,14 +15,14 @@ let package = Package(
         .library(name: "MLXEmbeddersHFAPI", targets: ["MLXEmbeddersHFAPI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/ml-explore/mlx-swift-lm.git", from: "3.31.3"),
+        .package(url: "https://github.com/viktike/vmlx-swift-lm.git", branch: "new"),
         .package(url: "https://github.com/DePasqualeOrg/swift-hf-api", from: "0.2.2"),
     ],
     targets: [
         .target(
             name: "MLXLMHFAPI",
             dependencies: [
-                .product(name: "MLXLMCommon", package: "mlx-swift-lm"),
+                .product(name: "MLXLMCommon", package: "vmlx-swift-lm"),
                 .product(name: "HFAPI", package: "swift-hf-api"),
             ]
         ),
@@ -39,8 +39,8 @@ let package = Package(
             dependencies: [
                 "MLXLMHFAPI",
                 "MLXEmbeddersHFAPI",
-                .product(name: "MLXEmbedders", package: "mlx-swift-lm"),
-                .product(name: "BenchmarkHelpers", package: "mlx-swift-lm"),
+                .product(name: "MLXEmbedders", package: "vmlx-swift-lm"),
+                .product(name: "BenchmarkHelpers", package: "vmlx-swift-lm"),
             ]
         ),
     ]
