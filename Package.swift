@@ -29,7 +29,7 @@ let package = Package(
         .target(
             name: "MLXEmbeddersHFAPI",
             dependencies: [
-                .product(name: "MLXEmbedders", package: "mlx-swift-lm"),
+                .product(name: "MLXEmbedders", package: "vmlx-swift-lm"),
                 "MLXLMHFAPI",
                 .product(name: "HFAPI", package: "swift-hf-api"),
             ]
